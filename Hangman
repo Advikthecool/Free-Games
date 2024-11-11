@@ -1,0 +1,173 @@
+import random
+import tkinter as tk
+from tkinter import messagebox
+
+# List of meaningful words to choose from
+WORD_LIST = [
+    "PYTHON", "JAVASCRIPT", "HANGMAN", "DEVELOPER", "ALGORITHM",
+    "FUNCTION", "VARIABLE", "COMPUTER", "PROGRAMMING", "LANGUAGE",
+    "NETWORK", "DATABASE", "ANALYSIS", "RECURSION", "SOFTWARE", "abandon", "ability", "absence", "absolve", "academy", "account", "achieve", "acquire", "action", "adaptor", "advance", "adverse", "adviser", "affable", "agency", "agility", "airline", "albumen", "algebra", "allegro", "allergy", "allocate", "amazing", "ambient", "amplify", "ancient", "animate", "anomaly", "antique", "anxiety", "appease", "appoint", "approve", "aquatic", "archive", "armored", "article", "artisan", "ascribe", "aspirin", "athlete", "attempt", "attract", "audible", "augment", "autopsy", "awesome", "balance", "banquet", "bargain", "barrier", "battery", "believe", "benefit", "bicycle", "biology", "bizarre", "blanket", "blessed", "blinker", "boulder", "bracelet", "breeder", "brevity", "builder", "cabinet", "caliber", "calmly", "capture", "careful", "carpenter", "carrier", "caution", "ceiling", "ceramic", "chalice", "charity", "chassis", "cheaper", "chimney", "chronic", "clarity", "classic", "climate", "clutter", "cluster", "collect", "comfort", "compact", "compare", "compass", "compile", "complex", "compose", "compute", "conceal", "concept", "concise", "concord", "conduct", "confirm", "connect", "conquer", "consent", "consult", "contact", "contain", "contest", "control", "convert", "cooling", "courage", "cylinder", "debacle", "declare", "decline", "deflect", "density", "deposit", "descend", "deserve", "despite", "destroy", "develop", "diagram", "digital", "dignity", "disease", "dismiss", "display", "dispute", "distance", "disturb", "diverse", "doctrine", "dolphin", "domestic", "dominate", "dormant", "drafted", "dresser", "dynamic", "earthen", "eclipse", "elastic", "elation", "elevate", "embassy", "embrace", "empathy", "empower", "endorse", "engaged", "engrave", "enhance", "enlight", "enquiry", "environ", "episode", "erosion", "eternal", "ethical", "evaluate", "evening", "examine", "excited", "exhibit", "explain", "explore", "express", "extract", "extreme", "failure", "fantasy", "farming", "fashion", "fatigue", "federal", "fencing", "ferment", "fidelity", "finance", "finesse", "flaming", "flatter", "flicker", "flipper", "focused", "forager", "foreign", "fortune", "fragile", "freedom", "furnace", "further", "gallery", "gateway", "general", "genuine", "glimmer", "glorious", "granite", "granted", "gravity", "grocery", "habitat", "harmony", "harvest", "healing", "healthy", "heating", "heredit", "history", "holiday", "honesty", "horizon", "hostile", "housing", "however", "humidity", "hunters", "hygiene", "illegal", "immense", "impress", "improve", "impulse", "include", "inflate", "inherit", "inspire", "instant", "intense", "interim", "interpret", "involve", "isolate", "jewelry", "journey", "justice", "kitchen", "landing", "lantern", "lateral", "library", "limited", "lingual", "loyalty", "luggage", "machine", "magnify", "manager", "manhood", "mariner", "massive", "measure", "medical", "melanch", "melting", "mention", "mermaid", "message", "miracle", "mission", "mistake", "mixture", "mobility", "monitor", "monthly", "morning", "motion", "mountain", "mystery", "natural", "network", "nomadic", "notable", "notebook", "nurture", "observe", "obvious", "officer", "onboard", "operate", "optimal", "organic", "outcome", "outdoor", "outgrow", "package", "painter", "palpable", "pandemic", "passage", "patience", "patriot", "payment", "perform", "persist", "picture", "plastic", "pleasant", "poetry", "politen", "popular", "portion", "posture", "precise", "predict", "present", "prevent", "privacy", "proceed", "process", "produce", "profile", "program", "promise", "prosper", "provide", "provoke", "publish", "purpose", "quality", "quarter", "question", "radical", "radiant", "rampant", "rebuild", "receive", "recover", "refresh", "regimen", "regular", "reliable", "release", "remains", "remedy", "remote", "renewal", "repair", "replace", "request", "reserve", "resolve", "respect", "respond", "restore", "reunion", "revenue", "reverse", "revival", "rewrite", "rhythmic", "romance", "routine", "sailing", "satisfy", "science", "scramble", "section", "segment", "sensible", "shelter", "shorten", "silence", "similar", "simplify", "society", "soldier", "somehow", "special", "specify", "species", "spindle", "sponsor", "stamina", "station", "storage", "strange", "strides", "striker", "struggle", "subject", "skibidi", "subside", "success", "suggest", "support", "surpass", "survive", "swimmer", "symbolic", "symphony", "synonym", "tangible", "tension", "terrace", "thermal", "thought", "thriving", "together", "topical", "tourism", "trading", "trainer", "transform", "transmit", "traverse", "trouble", "trusted", "typical", "ultimate", "unaware", "unicorn", "unite", "universal", "unknown", "upgrade", "upstairs", "utility", "valuable", "variety", "vehicle", "venture", "version", "vibrate", "victory", "vintage", "visible", "visitor", "vitamin", "volcano", "voltage", "warranty", "wealthy", "weather", "webinar", "welcome", "whisper", "willing", "withdraw", "wonders", "workshop", "writing", "yielding", "zealous", "America", "Amazon", "Athens", "Australia", "Barcelona", "Beijing", "Bermuda", "Berlin", "Bolivia", "Brazil", "Brooklyn", "Budapest", "Canada", "Caspian", "Chicago", "China", "Cleveland", "Columbia", "Copenhagen", "Dallas", "Denver", "Detroit", "Dubai", "Dublin", "Ecuador", "Egypt", "England", "Ethiopia", "Florida", "France", "Germany", "Holland", "Houston", "Hungary", "India", "Ireland", "Israel", "Italy", "Jacksonville", "Jamaica", "Japan", "Jerusalem", "Kenya", "Kingston", "Lebanon", "London", "Madison", "Malaysia", "Manhattan", "Melbourne", "Mexico", "Michigan", "Morocco", "Mumbai", "Nairobi", "Namibia", "Nepal", "Nigeria", "Norway", "Orlando", "Pakistan", "Panama", "Paris", "Peru", "Phoenix", "Poland", "Portugal", "Qatar", "Quebec", "Rwanda", "Sacramento", "Saudi Arabia", "Scotland", "Seattle", "Singapore", "Syria", "Taiwan", "Tampa", "Tokyo", "Trinidad", "Tucson", "Turkey", "Uganda", "United States", "Uruguay", "Vancouver", "Washington", "Zambia"
+]
+
+def generate_random_word():
+    """Generate a random word from the WORD_LIST."""
+    return random.choice(WORD_LIST)
+
+def display_hangman(tries):
+    """Display hangman graphic based on number of tries left."""
+    stages = [
+        """
+           -----
+           |   |
+               |
+               |
+               |
+               |
+         =========
+        """,
+        """
+           -----
+           |   |
+           O   |
+               |
+               |
+               |
+         =========
+        """,
+        """
+           -----
+           |   |
+           O   |
+           |   |
+               |
+               |
+         =========
+        """,
+        """
+           -----
+           |   |
+           O   |
+          /|   |
+               |
+               |
+         =========
+        """,
+        """
+           -----
+           |   |
+           O   |
+          /|\\  |
+               |
+               |
+         =========
+        """,
+        """
+           -----
+           |   |
+           O   |
+          /|\\  |
+          /    |
+               |
+         =========
+        """,
+        """
+           -----
+           |   |
+           O   |
+          /|\\  |
+          / \\  |
+               |
+         =========
+        """
+    ]
+    return stages[tries]
+
+class HangmanGame:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Hangman Game")
+        self.reset_game()
+
+    def reset_game(self):
+        """Reset the game state for a new game."""
+        self.word = generate_random_word().upper()  # Make word uppercase
+        self.word_completion = "_" * len(self.word)
+        self.tries = 6
+        self.guessed = False
+        self.guessed_letters = []
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        """Create and place widgets for the hangman game."""
+        if hasattr(self, 'word_label'):
+            self.word_label.destroy()
+            self.letter_entry.destroy()
+            self.submit_button.destroy()
+            self.hangman_label.destroy()
+            self.tries_label.destroy()
+            self.reset_button.destroy()
+
+        self.word_label = tk.Label(self.root, text=self.word_completion, font=('Arial', 24))
+        self.word_label.pack(pady=20)
+
+        self.letter_entry = tk.Entry(self.root, font=('Arial', 18))
+        self.letter_entry.pack(pady=20)
+
+        self.submit_button = tk.Button(self.root, text="Submit Guess", font=('Arial', 18), command=self.check_letter)
+        self.submit_button.pack(pady=20)
+
+        self.hangman_label = tk.Label(self.root, text=display_hangman(self.tries), font=('Arial', 18))
+        self.hangman_label.pack(pady=20)
+
+        self.tries_label = tk.Label(self.root, text=f"Tries Left: {self.tries}", font=('Arial', 18))
+        self.tries_label.pack(pady=20)
+
+        self.reset_button = tk.Button(self.root, text="Reset Game", font=('Arial', 18), command=self.reset_game)
+        self.reset_button.pack(pady=20)
+
+    def update_display(self):
+        """Update the display of the word, hangman, and tries left."""
+        self.word_label.config(text=self.word_completion)
+        self.hangman_label.config(text=display_hangman(self.tries))
+        self.tries_label.config(text=f"Tries Left: {self.tries}")
+
+        if self.guessed:
+            messagebox.showinfo("Hangman", "Congratulations, you guessed the word!")
+            self.reset_game()
+
+        if self.tries == 0:
+            messagebox.showinfo("Hangman", f"You lost! The word was {self.word}")
+            self.reset_game()
+
+    def check_letter(self):
+        """Check the guessed letter against the word."""
+        guess = self.letter_entry.get().upper()  # Convert guess to uppercase
+        self.letter_entry.delete(0, tk.END)
+
+        if len(guess) == 1 and guess.isalpha():
+            if guess in self.guessed_letters:
+                messagebox.showinfo("Hangman", f"You already guessed the letter '{guess}'")
+            elif guess not in self.word:
+                self.tries -= 1
+                self.guessed_letters.append(guess)
+                messagebox.showinfo("Hangman", f"'{guess}' is not in the word.")
+            else:
+                self.guessed_letters.append(guess)
+                word_as_list = list(self.word_completion)
+                indices = [i for i, letter in enumerate(self.word) if letter == guess]  # Compare with word
+                for index in indices:
+                    word_as_list[index] = guess
+                self.word_completion = "".join(word_as_list)
+                if "_" not in self.word_completion:
+                    self.guessed = True
+
+            self.update_display()
+        else:
+            messagebox.showwarning("Hangman", "Please enter a single letter.")
+
+# Running the game
+if __name__ == "__main__":
+    root = tk.Tk()
+    game = HangmanGame(root)
+    root.mainloop()
